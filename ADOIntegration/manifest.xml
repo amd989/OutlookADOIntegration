@@ -14,7 +14,7 @@
   <Description DefaultValue="Attach Outlook emails to Azure DevOps work items" />
   <IconUrl DefaultValue="https://localhost:44366/assets/icon-outline-32.png" />
   <HighResolutionIconUrl DefaultValue="https://localhost:44366/assets/icon-128.png" />
-  <SupportUrl DefaultValue="https://github.com/amd989/OutlookTFSIntegration" />
+  <SupportUrl DefaultValue="https://github.com/amd989/OutlookADOIntegration" />
 
   <AppDomains>
     <AppDomain>https://localhost:44366</AppDomain>

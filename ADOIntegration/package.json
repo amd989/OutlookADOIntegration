@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "webpack serve --mode development",
     "build": "webpack --mode production",
+    "build:prod": "node scripts/build-prod.js",
     "start": "webpack serve --mode development",
     "lint": "eslint src --ext .ts,.tsx"
   },
@@ -22,6 +23,7 @@
     "@types/office-js": "^1.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "copy-webpack-plugin": "^14.0.0",
     "css-loader": "^7.0.0",
     "html-webpack-plugin": "^5.0.0",
     "mini-css-extract-plugin": "^2.0.0",

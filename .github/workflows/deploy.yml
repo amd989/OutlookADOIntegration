@@ -1,0 +1,56 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'ADOIntegration/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ADOIntegration/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ADOIntegration
+        run: npm ci
+
+      - name: Build for production
+        working-directory: ADOIntegration
+        env:
+          ADDIN_BASE_URL: https://amd989.github.io/OutlookADOIntegration
+        run: node scripts/build-prod.js
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ADOIntegration/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

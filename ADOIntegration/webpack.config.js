@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const devCertsDir = path.join(require("os").homedir(), ".office-addin-dev-certs");
 
@@ -47,6 +48,9 @@ module.exports = (env, argv) => {
         template: "./src/commands/commands.html",
         filename: "commands.html",
         chunks: ["commands"],
+      }),
+      new CopyWebpackPlugin({
+        patterns: [{ from: "assets", to: "assets" }],
       }),
     ],
     devServer: {
