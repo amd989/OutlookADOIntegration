@@ -1,45 +1,58 @@
 
-Outlook TFS Integration
------------------------
+Outlook Azure DevOps Integration
+---------------------------------
 
-This little plugin allows you to attach emails to TFS work items from Outlook in a easy way. Allowing you to choose as many task you want to attach the email to.
+Attach emails to Azure DevOps work items directly from Outlook. Select one or more work items by ID, and the email is uploaded as an `.eml` attachment.
 
-Downloads
----------
+Works with the new Outlook (Windows, web, Mac) and classic Outlook desktop.
 
-[ClickOnce Installer](http://bit.ly/outlooktfs_clickonce)
+### Setup
 
-[ClickOnce Installer Package](bit.ly/outlooktfs_package)
+```bash
+cd ADOIntegration
+npm install
+npm start
+```
 
+This starts a dev server on `https://localhost:44366`. You'll need the [Office dev certs](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins) installed:
 
-Known Issues
-------------
+```bash
+npx office-addin-dev-certs install
+```
 
-It seems that the combination of either Windows 8 and Outlook 2013 or Outlook 2013 itself is causing the addin not to install due that the certificate I'm using is a development certificate and not a CA validated cert.
+### Sideloading
 
-I will update with a new version that includes a valid cert so that installations in those systems would succeed.
+1. Open Outlook (new or web)
+2. Open any email → **Get Add-ins** → **My add-ins** → **Add a custom add-in** → **Add from file...**
+3. Select `ADOIntegration/manifest.xml`
 
-Change Log
-----------
+### Usage
 
-*2015/04/26 v1.0.0.9*
+1. Open an email you want to attach.
+2. Click **"Attach to ADO"** in the ribbon.
+3. On first use, configure your Azure DevOps org URL, project, and authentication (PAT or Entra ID).
+4. Enter a work item ID and click **Add**. Repeat for multiple work items.
+5. Click **Attach** — the email is uploaded as an `.eml` file to each selected work item.
 
-    * Renamed the Title to depict you can add attachments to work items (bugs, tasks, etc.)
+### Authentication
 
-*2015/01/28 v1.0.0.8*
+Two methods supported:
 
-    * Added Background Worker to avoid UI freeze.
-    * Fixed bug when adding email to multiple tasks.
+- **Personal Access Token (PAT)** — paste a token with work item read/write scope. Simple setup, no Azure registration needed.
+- **Microsoft Entra ID** — OAuth popup flow. Requires an [Azure App Registration](https://portal.azure.com) with the `Azure DevOps user_impersonation` scope.
 
-*2014/10/31 v1.0.0.6*
+### Tech Stack
 
-    * Initial Commit.
+- TypeScript, React, Fluent UI
+- Office.js (Outlook Mail Read add-in)
+- Azure DevOps REST API v7.1
+- MSAL.js for Entra ID authentication
 
-Usage
------
+---
 
-* Install it by runing the setup.exe.
-* Open an email you want to attach to task.
-* Click "Attach to TFS" button, select your TFS server in screen shown.
-* Input task number and click + button.
-* Click Save.
+Legacy: TFS Integration (archived)
+-----------------------------------
+
+The original VSTO add-in for classic Outlook + TFS is in `TFSIntegration/`. It is no longer maintained — VSTO is not supported in the new Outlook.
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.
