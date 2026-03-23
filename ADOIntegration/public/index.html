@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADO Attach — Outlook Add-in for Azure DevOps</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; color: #323130; background: #faf9f8; }
+
+    .hero {
+      background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+      color: #fff;
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .hero h1 { font-size: 2em; font-weight: 600; margin-bottom: 8px; }
+    .hero p { font-size: 1.1em; opacity: 0.92; max-width: 560px; margin: 0 auto; line-height: 1.5; }
+    .hero-icon { width: 80px; height: 80px; margin-bottom: 16px; border-radius: 16px; }
+
+    .container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
+
+    .badges { text-align: center; margin-bottom: 32px; }
+    .badge {
+      display: inline-block;
+      background: #e1dfdd;
+      color: #323130;
+      font-size: 0.8em;
+      padding: 4px 10px;
+      border-radius: 12px;
+      margin: 4px;
+    }
+
+    h2 { font-size: 1.2em; font-weight: 600; margin: 28px 0 12px; color: #0078d4; }
+    p, li { font-size: 0.95em; line-height: 1.6; }
+    ul { padding-left: 20px; margin-bottom: 16px; }
+    li { margin-bottom: 6px; }
+
+    .steps { counter-reset: step; list-style: none; padding-left: 0; }
+    .steps li { counter-increment: step; padding-left: 32px; position: relative; margin-bottom: 12px; }
+    .steps li::before {
+      content: counter(step);
+      position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: #0078d4; color: #fff;
+      font-size: 0.8em; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .install-box {
+      background: #fff;
+      border: 1px solid #edebe9;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .install-box h3 { font-size: 1em; font-weight: 600; margin-bottom: 8px; }
+
+    .btn {
+      display: inline-block;
+      background: #0078d4;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-size: 0.95em;
+      font-weight: 600;
+      margin: 8px 4px;
+      transition: background 0.15s;
+    }
+    .btn:hover { background: #106ebe; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #0078d4;
+      color: #0078d4;
+    }
+    .btn-outline:hover { background: #f3f9fd; }
+
+    .cta { text-align: center; margin: 32px 0; }
+
+    .auth-table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; }
+    .auth-table th, .auth-table td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #edebe9; font-size: 0.9em; }
+    .auth-table th { font-weight: 600; color: #605e5c; }
+
+    footer {
+      text-align: center;
+      padding: 24px 20px;
+      font-size: 0.85em;
+      color: #605e5c;
+      border-top: 1px solid #edebe9;
+      margin-top: 40px;
+    }
+    footer a { color: #0078d4; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <img class="hero-icon" src="assets/icon-128.png" alt="ADO Attach icon" />
+    <h1>ADO Attach</h1>
+    <p>Attach emails to Azure DevOps work items directly from Outlook. Works with the new Outlook, Outlook on the web, Mac, and classic desktop.</p>
+  </div>
+
+  <div class="container">
+    <div class="badges">
+      <span class="badge">TypeScript</span>
+      <span class="badge">React</span>
+      <span class="badge">Fluent UI</span>
+      <span class="badge">Office.js</span>
+      <span class="badge">Azure DevOps API v7.1</span>
+    </div>
+
+    <h2>What it does</h2>
+    <p>Select one or more Azure DevOps work items by ID, and the current email is uploaded as an <code>.eml</code> attachment to each one. No copy-pasting, no manual downloads.</p>
+
+    <h2>Install</h2>
+    <div class="install-box">
+      <h3>Sideload in Outlook</h3>
+      <ol class="steps">
+        <li>Download the manifest file using the button below.</li>
+        <li>In Outlook (new or web), open any email.</li>
+        <li>Go to <strong>Get Add-ins</strong> → <strong>My add-ins</strong> → <strong>Add a custom add-in</strong> → <strong>Add from file…</strong></li>
+        <li>Select the downloaded <code>manifest.xml</code> file.</li>
+      </ol>
+      <div class="cta">
+        <a class="btn" href="manifest.xml" download>Download manifest.xml</a>
+      </div>
+    </div>
+
+    <h2>How to use</h2>
+    <ol class="steps">
+      <li>Open an email you want to attach.</li>
+      <li>Click <strong>"Attach to ADO"</strong> in the ribbon.</li>
+      <li>On first use, configure your Azure DevOps org URL, project, and authentication.</li>
+      <li>Enter a work item ID and click <strong>Add</strong>. Repeat for multiple items.</li>
+      <li>Click <strong>Attach</strong> — done!</li>
+    </ol>
+
+    <h2>Authentication</h2>
+    <table class="auth-table">
+      <tr>
+        <th>Method</th>
+        <th>Account type</th>
+        <th>Setup</th>
+      </tr>
+      <tr>
+        <td><strong>Personal Access Token</strong></td>
+        <td>Personal or work</td>
+        <td>Generate a PAT with <em>Work Items: Read &amp; Write</em> scope and paste it in settings.</td>
+      </tr>
+      <tr>
+        <td><strong>Microsoft Entra ID</strong></td>
+        <td>Work / school only</td>
+        <td>Sign in via popup. Requires an Azure App Registration.</td>
+      </tr>
+    </table>
+    <p>Using a personal Microsoft account (<code>@outlook.com</code>, <code>@hotmail.com</code>, <code>@gmail.com</code>)? Use the <strong>PAT</strong> method.</p>
+
+    <div class="cta">
+      <a class="btn-outline btn" href="https://github.com/amd989/OutlookADOIntegration">View on GitHub</a>
+    </div>
+  </div>
+
+  <footer>
+    <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a> · <a href="https://github.com/amd989/OutlookADOIntegration/blob/master/LICENSE">MIT License</a>
+    <br />
+    &copy; 2026 Alejandro Mora
+  </footer>
+</body>
+</html>
