@@ -62,7 +62,10 @@ module.exports = (env, argv) => {
         chunks: ["commands"],
       }),
       new CopyWebpackPlugin({
-        patterns: [{ from: "assets", to: "assets" }],
+        patterns: [
+          { from: "assets", to: "assets" },
+          { from: "public", to: "." },
+        ],
       }),
       new webpack.DefinePlugin({
         "process.env.ENTRA_CLIENT_ID": JSON.stringify(envVars.ENTRA_CLIENT_ID || ""),

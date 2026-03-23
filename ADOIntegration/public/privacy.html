@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — ADO Attach</title>
+  <style>
+    body { font-family: "Segoe UI", system-ui, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 20px; line-height: 1.6; color: #323130; }
+    h1 { font-size: 1.5em; border-bottom: 1px solid #edebe9; padding-bottom: 8px; }
+    h2 { font-size: 1.15em; margin-top: 1.5em; }
+    p, li { font-size: 0.95em; }
+    .updated { color: #605e5c; font-size: 0.85em; }
+  </style>
+</head>
+<body>
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: March 23, 2026</p>
+
+  <h2>Overview</h2>
+  <p><strong>ADO Attach</strong> is an Outlook add-in that attaches emails to Azure DevOps work items. It runs entirely in your browser or Outlook client — there is no backend server, and no data is sent to the add-in developer.</p>
+
+  <h2>Data collected</h2>
+  <p>The add-in does <strong>not</strong> collect, store, or transmit any personal data to third parties. Specifically:</p>
+  <ul>
+    <li>No analytics or telemetry is collected.</li>
+    <li>No cookies are set by the add-in.</li>
+    <li>No user data is sent to the add-in developer or any third-party service.</li>
+  </ul>
+
+  <h2>Data processed locally</h2>
+  <p>When you use the add-in, the following data is processed <strong>entirely within your browser or Outlook client</strong>:</p>
+  <ul>
+    <li><strong>Email content</strong> — exported as an <code>.eml</code> file via Office.js and sent directly to your Azure DevOps organization.</li>
+    <li><strong>Azure DevOps credentials</strong> — your Personal Access Token (PAT) or Microsoft Entra ID OAuth token is used to authenticate with Azure DevOps. PATs are stored in Outlook's roaming settings (synced by Microsoft, not by this add-in). OAuth tokens are managed by MSAL.js and stored in browser session storage.</li>
+    <li><strong>Connection settings</strong> — your Azure DevOps organization URL and project name are stored in Outlook's roaming settings.</li>
+  </ul>
+
+  <h2>Third-party services</h2>
+  <p>The add-in communicates directly with:</p>
+  <ul>
+    <li><strong>Azure DevOps</strong> (<code>dev.azure.com</code>) — to fetch work items and upload email attachments, using credentials you provide.</li>
+    <li><strong>Microsoft Entra ID</strong> (<code>login.microsoftonline.com</code>) — only if you choose the Entra ID sign-in method, to authenticate via OAuth.</li>
+  </ul>
+  <p>These communications go directly from your client to Microsoft's services. No data passes through any intermediary server operated by the add-in developer.</p>
+
+  <h2>Data retention</h2>
+  <p>The add-in does not retain any data. Settings stored in Outlook roaming settings are managed by Microsoft and can be cleared by removing the add-in.</p>
+
+  <h2>Children's privacy</h2>
+  <p>This add-in is not directed at children under 13 and does not knowingly collect data from children.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>Updates will be posted on this page with a revised date.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about this policy can be directed to the project's <a href="https://github.com/amd989/OutlookADOIntegration/issues">GitHub Issues</a> page.</p>
+</body>
+</html>

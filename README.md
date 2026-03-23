@@ -36,10 +36,12 @@ npx office-addin-dev-certs install
 
 ### Authentication
 
-Two methods supported:
+Two methods supported, depending on your account type:
 
-- **Personal Access Token (PAT)** — paste a token with work item read/write scope. Simple setup, no Azure registration needed.
-- **Microsoft Entra ID** — OAuth popup flow. Requires an [Azure App Registration](https://portal.azure.com) with the `Azure DevOps user_impersonation` scope.
+- **Personal Access Token (PAT)** — Required for **personal Microsoft accounts**. Generate a token at `https://dev.azure.com/{your-org}/_usersSettings/tokens` with **Work Items: Read & Write** scope. Paste it into the add-in settings. No Azure app registration needed.
+- **Microsoft Entra ID (OAuth)** — Available for **work or school accounts** only. Signs in via a popup using MSAL.js. Requires an [Azure App Registration](https://portal.azure.com) with the `Azure DevOps user_impersonation` delegated permission and a **SPA** redirect URI pointing to the add-in's `taskpane.html`.
+
+> **Which should I use?** If you log into Azure DevOps with a `@outlook.com`, `@hotmail.com`, or `@gmail.com` address, use **PAT**. If you use a corporate/school email (`@yourcompany.com`), either method works.
 
 ### Tech Stack
 
@@ -55,4 +57,4 @@ Legacy: TFS Integration (archived)
 
 The original VSTO add-in for classic Outlook + TFS is in `TFSIntegration/`. It is no longer maintained — VSTO is not supported in the new Outlook.
 
-See [CHANGELOG.md](CHANGELOG.md) for version history.
+See [CHANGELOG.md](CHANGELOG.md) for version history. | [Privacy Policy](ADOIntegration/public/privacy.html) | [Terms of Use](ADOIntegration/public/terms.html)

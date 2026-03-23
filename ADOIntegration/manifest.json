@@ -14,8 +14,8 @@
   "developer": {
     "name": "Alejandro Mora",
     "websiteUrl": "https://github.com/amd989/OutlookADOIntegration",
-    "privacyUrl": "https://github.com/amd989/OutlookADOIntegration",
-    "termsOfUseUrl": "https://github.com/amd989/OutlookADOIntegration"
+    "privacyUrl": "https://localhost:44366/privacy.html",
+    "termsOfUseUrl": "https://localhost:44366/terms.html"
   },
   "icons": {
     "outline": "assets/icon-32.png",
