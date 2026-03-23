@@ -15,11 +15,12 @@ if (fs.existsSync(envPath)) {
 }
 
 const devCertsDir = path.join(require("os").homedir(), ".office-addin-dev-certs");
+const hasDevCerts = fs.existsSync(path.join(devCertsDir, "localhost.key"));
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === "development";
 
-  return {
+  const config = {
     entry: {
       taskpane: "./src/taskpane/index.tsx",
       commands: "./src/commands/commands.ts",
@@ -67,25 +68,32 @@ module.exports = (env, argv) => {
         "process.env.ENTRA_CLIENT_ID": JSON.stringify(envVars.ENTRA_CLIENT_ID || ""),
       }),
     ],
-    devServer: {
+    devtool: isDev ? "source-map" : false,
+  };
+
+  if (isDev) {
+    config.devServer = {
       static: {
         directory: path.join(__dirname, "assets"),
         publicPath: "/assets",
       },
       port: 44366,
       host: "localhost",
-      server: {
-        type: "https",
-        options: {
-          key: fs.readFileSync(path.join(devCertsDir, "localhost.key")),
-          cert: fs.readFileSync(path.join(devCertsDir, "localhost.crt")),
-          ca: fs.readFileSync(path.join(devCertsDir, "ca.crt")),
-        },
-      },
+      server: hasDevCerts
+        ? {
+            type: "https",
+            options: {
+              key: fs.readFileSync(path.join(devCertsDir, "localhost.key")),
+              cert: fs.readFileSync(path.join(devCertsDir, "localhost.crt")),
+              ca: fs.readFileSync(path.join(devCertsDir, "ca.crt")),
+            },
+          }
+        : "https",
       headers: {
         "Access-Control-Allow-Origin": "*",
       },
-    },
-    devtool: isDev ? "source-map" : false,
-  };
+    };
+  }
+
+  return config;
 };
