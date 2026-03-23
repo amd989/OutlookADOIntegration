@@ -213,3 +213,12 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+#############
+## Node.js (ADOIntegration)
+#############
+
+node_modules/
+ADOIntegration/dist/
+.env
+.vscode/settings.json

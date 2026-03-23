@@ -1,0 +1,124 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/teams/vDevPreview/MicrosoftTeams.schema.json",
+  "manifestVersion": "devPreview",
+  "id": "e1b3a5c7-9f2d-4e8b-a6c1-3d7f0e2b9a4c",
+  "version": "2.0.0",
+  "name": {
+    "short": "ADO Attach",
+    "full": "Attach Emails to Azure DevOps Work Items"
+  },
+  "description": {
+    "short": "Attach Outlook emails to Azure DevOps work items",
+    "full": "Select an email in Outlook and attach it as an EML file to one or more Azure DevOps work items. Supports authentication via Microsoft Entra ID or Personal Access Tokens."
+  },
+  "developer": {
+    "name": "Alejandro Mora",
+    "websiteUrl": "https://github.com/amd989/OutlookADOIntegration",
+    "privacyUrl": "https://github.com/amd989/OutlookADOIntegration",
+    "termsOfUseUrl": "https://github.com/amd989/OutlookADOIntegration"
+  },
+  "icons": {
+    "outline": "assets/icon-32.png",
+    "color": "assets/icon-128.png"
+  },
+  "accentColor": "#0078D4",
+  "extensions": [
+    {
+      "requirements": {
+        "capabilities": [
+          {
+            "name": "Mailbox",
+            "minVersion": "1.5"
+          }
+        ]
+      },
+      "runtimes": [
+        {
+          "requirements": {
+            "capabilities": [
+              {
+                "name": "Mailbox",
+                "minVersion": "1.5"
+              }
+            ]
+          },
+          "id": "TaskPaneRuntime",
+          "type": "general",
+          "code": {
+            "page": "https://localhost:44366/taskpane.html"
+          },
+          "lifetime": "short",
+          "actions": [
+            {
+              "id": "openTaskpane",
+              "type": "openPage",
+              "view": "taskpane"
+            }
+          ]
+        },
+        {
+          "requirements": {
+            "capabilities": [
+              {
+                "name": "Mailbox",
+                "minVersion": "1.5"
+              }
+            ]
+          },
+          "id": "CommandsRuntime",
+          "type": "general",
+          "code": {
+            "page": "https://localhost:44366/commands.html",
+            "script": "https://localhost:44366/commands.bundle.js"
+          },
+          "lifetime": "short",
+          "actions": [
+            {
+              "id": "showTaskpane",
+              "type": "executeFunction",
+              "displayName": "Attach to Azure DevOps"
+            }
+          ]
+        }
+      ],
+      "ribbons": [
+        {
+          "contexts": ["mailRead"],
+          "tabs": [
+            {
+              "builtInTabId": "TabDefault",
+              "groups": [
+                {
+                  "id": "adoGroup",
+                  "label": "Azure DevOps",
+                  "icons": [
+                    { "size": 16, "url": "https://localhost:44366/assets/icon-16.png" },
+                    { "size": 32, "url": "https://localhost:44366/assets/icon-32.png" },
+                    { "size": 80, "url": "https://localhost:44366/assets/icon-80.png" }
+                  ],
+                  "controls": [
+                    {
+                      "id": "attachButton",
+                      "type": "button",
+                      "label": "Attach to ADO",
+                      "icons": [
+                        { "size": 16, "url": "https://localhost:44366/assets/icon-16.png" },
+                        { "size": 32, "url": "https://localhost:44366/assets/icon-32.png" },
+                        { "size": 80, "url": "https://localhost:44366/assets/icon-80.png" }
+                      ],
+                      "supertip": {
+                        "title": "Attach Email to Work Item",
+                        "description": "Attach this email as a file to one or more Azure DevOps work items."
+                      },
+                      "actionId": "openTaskpane"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
