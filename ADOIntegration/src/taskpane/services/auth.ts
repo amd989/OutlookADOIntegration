@@ -18,7 +18,7 @@ function getMsalConfig(): Configuration {
     auth: {
       clientId: ENTRA_CLIENT_ID,
       authority: "https://login.microsoftonline.com/common",
-      redirectUri: window.location.origin + "/taskpane.html",
+      redirectUri: new URL("taskpane.html", window.location.href).href,
     },
     cache: {
       cacheLocation: "localStorage",
