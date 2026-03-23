@@ -7,12 +7,16 @@ import {
 
 const AZURE_DEVOPS_SCOPE = "499b84ac-1321-427f-aa17-267ca6975798/user_impersonation";
 
+declare const process: { env: { ENTRA_CLIENT_ID: string } };
+
+const ENTRA_CLIENT_ID = process.env.ENTRA_CLIENT_ID;
+
 let msalInstance: PublicClientApplication | null = null;
 
-function getMsalConfig(clientId: string): Configuration {
+function getMsalConfig(): Configuration {
   return {
     auth: {
-      clientId,
+      clientId: ENTRA_CLIENT_ID,
       authority: "https://login.microsoftonline.com/common",
       redirectUri: window.location.origin + "/taskpane.html",
     },
@@ -22,9 +26,16 @@ function getMsalConfig(clientId: string): Configuration {
   };
 }
 
-export async function initializeMsal(clientId: string): Promise<void> {
+export function isEntraConfigured(): boolean {
+  return !!ENTRA_CLIENT_ID;
+}
+
+export async function initializeMsal(): Promise<void> {
   if (msalInstance) return;
-  msalInstance = new PublicClientApplication(getMsalConfig(clientId));
+  if (!ENTRA_CLIENT_ID) {
+    throw new Error("Entra ID Client ID is not configured.");
+  }
+  msalInstance = new PublicClientApplication(getMsalConfig());
   await msalInstance.initialize();
 }
 

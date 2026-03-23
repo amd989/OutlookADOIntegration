@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Input,
-  Label,
   Button,
   RadioGroup,
   Radio,
@@ -9,11 +8,13 @@ import {
   MessageBar,
   MessageBarBody,
   Spinner,
+  Text,
 } from "@fluentui/react-components";
 import { PlugConnected20Regular } from "@fluentui/react-icons";
 import type { AddinSettings, AuthMethod } from "../types/settings";
 import { validateConnection } from "../services/azureDevOps";
 import { buildPatAuthHeader } from "../services/patAuth";
+import { isEntraConfigured } from "../services/auth";
 
 interface ConnectionSettingsProps {
   initialSettings: AddinSettings | null;
@@ -21,7 +22,7 @@ interface ConnectionSettingsProps {
   onGetAuthHeader: () => Promise<string>;
   authMethod: AuthMethod | null;
   onLoginWithPat: (pat: string) => void;
-  onLoginWithEntra: (clientId: string) => Promise<void>;
+  onLoginWithEntra: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -29,16 +30,16 @@ export const ConnectionSettings: React.FC<ConnectionSettingsProps> = ({
   initialSettings,
   onSave,
   onGetAuthHeader,
-  authMethod,
   onLoginWithPat,
   onLoginWithEntra,
-  isAuthenticated,
 }) => {
+  const entraAvailable = isEntraConfigured();
   const [orgUrl, setOrgUrl] = useState(initialSettings?.orgUrl ?? "https://dev.azure.com/");
   const [project, setProject] = useState(initialSettings?.project ?? "");
-  const [selectedAuth, setSelectedAuth] = useState<AuthMethod>(initialSettings?.authMethod ?? "pat");
+  const [selectedAuth, setSelectedAuth] = useState<AuthMethod>(
+    initialSettings?.authMethod ?? (entraAvailable ? "entra" : "pat")
+  );
   const [pat, setPat] = useState(initialSettings?.pat ?? "");
-  const [clientId, setClientId] = useState("");
   const [validating, setValidating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -57,27 +58,19 @@ export const ConnectionSettings: React.FC<ConnectionSettingsProps> = ({
       return;
     }
 
-    if (selectedAuth === "entra" && !clientId.trim()) {
-      setError("Entra ID Client ID is required.");
-      return;
-    }
-
     setValidating(true);
     try {
-      // Authenticate first if needed
       let authHeader: string;
       if (selectedAuth === "pat") {
         onLoginWithPat(pat);
         authHeader = buildPatAuthHeader(pat);
       } else {
-        await onLoginWithEntra(clientId);
+        await onLoginWithEntra();
         authHeader = await onGetAuthHeader();
       }
 
-      // Validate the connection
       await validateConnection(orgUrl, project, authHeader);
 
-      // Save settings
       const settings: AddinSettings = {
         orgUrl: orgUrl.trim(),
         project: project.trim(),
@@ -117,8 +110,17 @@ export const ConnectionSettings: React.FC<ConnectionSettingsProps> = ({
           onChange={(_, data) => setSelectedAuth(data.value as AuthMethod)}
         >
           <Radio value="pat" label="Personal Access Token" />
-          <Radio value="entra" label="Microsoft Entra ID" />
+          <Radio
+            value="entra"
+            label="Sign in with Microsoft (work/school account)"
+            disabled={!entraAvailable}
+          />
         </RadioGroup>
+        {!entraAvailable && selectedAuth !== "entra" && (
+          <Text size={100} style={{ color: "#888", marginTop: "4px" }}>
+            Entra ID sign-in is not configured in this build.
+          </Text>
+        )}
       </Field>
 
       {selectedAuth === "pat" && (
@@ -128,16 +130,6 @@ export const ConnectionSettings: React.FC<ConnectionSettingsProps> = ({
             value={pat}
             onChange={(_, data) => setPat(data.value)}
             placeholder="Paste your PAT here"
-          />
-        </Field>
-      )}
-
-      {selectedAuth === "entra" && (
-        <Field label="Entra ID Application (Client) ID" required>
-          <Input
-            value={clientId}
-            onChange={(_, data) => setClientId(data.value)}
-            placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
           />
         </Field>
       )}

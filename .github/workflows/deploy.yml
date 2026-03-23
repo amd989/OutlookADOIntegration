@@ -33,6 +33,10 @@ jobs:
         working-directory: ADOIntegration
         run: npm ci
 
+      - name: Create .env
+        working-directory: ADOIntegration
+        run: echo "ENTRA_CLIENT_ID=7c8b286f-f46a-409b-b30a-9984a48bbb7f" > .env
+
       - name: Build for production
         working-directory: ADOIntegration
         env:

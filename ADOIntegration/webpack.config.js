@@ -1,7 +1,18 @@
 const fs = require("fs");
 const path = require("path");
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+
+// Load .env file if it exists
+const envPath = path.join(__dirname, ".env");
+const envVars = {};
+if (fs.existsSync(envPath)) {
+  fs.readFileSync(envPath, "utf-8").split("\n").forEach((line) => {
+    const match = line.match(/^\s*([\w]+)\s*=\s*(.*)\s*$/);
+    if (match) envVars[match[1]] = match[2];
+  });
+}
 
 const devCertsDir = path.join(require("os").homedir(), ".office-addin-dev-certs");
 
@@ -51,6 +62,9 @@ module.exports = (env, argv) => {
       }),
       new CopyWebpackPlugin({
         patterns: [{ from: "assets", to: "assets" }],
+      }),
+      new webpack.DefinePlugin({
+        "process.env.ENTRA_CLIENT_ID": JSON.stringify(envVars.ENTRA_CLIENT_ID || ""),
       }),
     ],
     devServer: {

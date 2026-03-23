@@ -9,7 +9,7 @@ interface UseAuthReturn {
   account: AccountInfo | null;
   authMethod: AuthMethod | null;
   restoreFromSettings: (settings: AddinSettings) => void;
-  loginWithEntra: (clientId: string) => Promise<void>;
+  loginWithEntra: () => Promise<void>;
   loginWithPat: (pat: string) => void;
   getAuthHeader: () => Promise<string>;
   logout: () => Promise<void>;
@@ -33,10 +33,10 @@ export function useAuth(): UseAuthReturn {
     // but MSAL caches tokens in localStorage, so acquireTokenSilent may work
   }, []);
 
-  const loginWithEntra = useCallback(async (clientId: string) => {
+  const loginWithEntra = useCallback(async () => {
     try {
       setError(null);
-      await initializeMsal(clientId);
+      await initializeMsal();
       const acct = await msalLogin();
       setAccount(acct);
       setAuthMethod("entra");
